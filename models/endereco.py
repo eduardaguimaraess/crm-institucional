@@ -1,5 +1,4 @@
-import urllib.request
-import json
+import requests
 
 # Classe Endereco
 class Endereco:
