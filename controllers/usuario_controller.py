@@ -8,4 +8,3 @@ class UsuarioController:
             **dados,
             lista_usuarios=lista_usuarios
         )
-
