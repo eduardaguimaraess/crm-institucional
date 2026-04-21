@@ -1,10 +1,6 @@
 from models.usuario import Usuario
 
-
 class AuthService:
-    """
-    Serviço responsável por autenticação e controle de sessão.
-    """
 
     @staticmethod
     def login(cpf: str, senha: str, usuarios: list[Usuario]) -> Usuario:
