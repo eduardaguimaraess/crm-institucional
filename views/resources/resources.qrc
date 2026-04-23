@@ -1,15 +1,15 @@
 <RCC>
   <qresource>
-    <file>images/logo.png</file>
-    <file>images/iconcoruja.png</file>
-    <file>images/dashboard_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/person_book_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/play_lesson_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/school_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/settings_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/mode_off_on_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/density_medium_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
-    <file>images/person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/logo.png</file>
+    <file>../images/iconcoruja.png</file>
+    <file>../images/dashboard_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/person_book_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/play_lesson_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/school_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/settings_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/mode_off_on_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/density_medium_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
+    <file>../images/person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png</file>
   </qresource>
 </RCC>

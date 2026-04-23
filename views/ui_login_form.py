@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QLineEdit,
     QPushButton, QSizePolicy, QWidget)
-from views import resources
+from views import resources_rc
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -177,7 +177,7 @@ class Ui_Form(object):
         self.label_9 = QLabel(self.widget_2)
         self.label_9.setObjectName(u"label_9")
         self.label_9.setGeometry(QRect(130, 90, 651, 681))
-        self.label_9.setPixmap(QPixmap(u":/Imagens/Slice 1.png"))
+        self.label_9.setPixmap(QPixmap(u":/Slice 1.png"))
 
         self.retranslateUi(Form)
 
