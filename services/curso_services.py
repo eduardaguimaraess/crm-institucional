@@ -32,3 +32,28 @@ class CursoService:
 
         lista_cursos.append(curso)
         return curso
+    
+    @staticmethod
+    def atualizar_curso(id_curso, nome: str, carga_horaria: int, valor: float, ativo: bool, lista_cursos: list):
+
+        # 1. Localizar o curso
+        curso = next(
+            (c for c in lista_cursos if c.id_curso == id_curso),
+            None
+        )
+
+        if not curso:
+            raise ValueError("Curso não encontrado.")
+
+        # 2. Evitar duplicidade
+        for outro in lista_cursos:
+            if outro.nome.lower() == nome.lower() and outro.id_curso != id_curso:
+                raise ValueError("Já existe outro curso com este nome.")
+
+        # 3. Atualizar dados
+        curso.nome = nome
+        curso.carga_horaria = carga_horaria
+        curso.valor = valor
+        curso.ativo = ativo
+
+        return curso

@@ -33,3 +33,32 @@ class MatriculaService:
         turma.adicionar_aluno(aluno)
 
         return matricula
+    
+    
+    @staticmethod
+    def atualizar_matricula(
+        id_matricula: int,
+        turma,
+        status: str,
+        lista_matriculas: list
+    ):
+
+        # 1. Localizar matrícula
+        matricula = next(
+            (m for m in lista_matriculas if m.id_matricula == id_matricula),
+            None
+        )
+
+        if not matricula:
+            raise ValueError("Matrícula não encontrada.")
+
+        # 2. Validar status permitido
+        status_validos = ["ativa", "cancelada", "concluída"]
+        if status not in status_validos:
+            raise ValueError("Status de matrícula inválido.")
+
+        # 3. Atualizar dados
+        matricula.turma = turma
+        matricula.status = status
+
+        return matricula

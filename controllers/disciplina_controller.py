@@ -11,3 +11,11 @@ class DisciplinaController:
             **dados,
             lista_disciplinas=lista_disciplinas
         )
+
+    @staticmethod
+    def atualizar_disciplina(dados: dict, lista_disciplinas: list):
+        
+        return DisciplinaService.atualizar_disciplina(
+            **dados,
+            lista_disciplinas=lista_disciplinas
+        )

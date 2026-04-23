@@ -41,3 +41,44 @@ class AlunoService:
         lista_alunos.append(aluno)
 
         return aluno
+    
+    @staticmethod
+    def atualizar_aluno(
+        id_aluno: int,
+        nome: str,
+        data_nascimento,
+        cpf: str,
+        genero: str,
+        telefone: str,
+        email: str,
+        endereco,
+        responsavel,
+        status: str,
+        lista_alunos: list
+    ):
+
+        aluno = next(
+            (a for a in lista_alunos if a.id_aluno == id_aluno),
+            None
+        )
+
+        if not aluno:
+            raise ValueError("Aluno não encontrado.")
+
+        for outro in lista_alunos:
+            if outro.cpf == cpf and outro.id_aluno != id_aluno:
+                raise ValueError("CPF já vinculado a outro aluno.")
+
+        aluno.nome = nome
+        aluno.data_nascimento = data_nascimento
+        aluno.cpf = cpf
+        aluno.genero = genero
+        aluno.telefone = telefone
+        aluno.email = email
+        aluno.endereco = endereco
+        aluno.responsavel = responsavel
+        aluno.status = status
+
+        return aluno
+
+    

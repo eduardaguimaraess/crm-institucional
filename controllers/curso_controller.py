@@ -10,3 +10,11 @@ class CursoController:
             **dados,
             lista_cursos=lista_cursos
         )
+        
+    @staticmethod
+    def atualizar_curso(dados: dict, lista_cursos: list):
+
+        return CursoService.atualizar_curso(
+            **dados,
+            lista_cursos=lista_cursos
+        )
