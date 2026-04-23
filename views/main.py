@@ -1,8 +1,8 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget, QMessageBox
-from ui_login_form import Ui_Form as Ui_Login
-from ui_criarconta import Ui_Form as Ui_Cadastro
-from sidebar import MySideBar
+from views.ui_login_form import Ui_Form as Ui_Login
+from views.ui_criarconta import Ui_Form as Ui_Cadastro
+from views.sidebar import MySideBar
 
 class GerenciadorJanelas(QMainWindow):
     def __init__(self):

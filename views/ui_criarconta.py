@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QLabel, QLineEdit,
     QPushButton, QSizePolicy, QWidget)
-import resources_rc
+from views import resources
 
 class Ui_Form(object):
     def setupUi(self, Form):

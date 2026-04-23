@@ -1,4 +1,4 @@
-from ui_sidebar import Ui_MainWindow
+from views.ui_sidebar import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import Signal 
 
