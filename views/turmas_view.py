@@ -14,6 +14,7 @@ def mostrar_turmas():
     cursos = st.session_state.cursos
     disciplinas = st.session_state.disciplinas
     usuarios = st.session_state.usuarios
+    matriculas = st.session_state.matriculas
 
     # Professores são usuários com cargo "Professor"
     professores = [
@@ -43,9 +44,19 @@ def mostrar_turmas():
                 st.write(f"**Vagas disponíveis:** {turma.vagas}")
                 st.write(f"**Status:** {turma.status}")
 
+                # ==========================================
+                # ALUNOS MATRICULADOS (DERIVADO DAS MATRÍCULAS)
+                # ==========================================
                 st.markdown("**Alunos matriculados:**")
-                if turma.alunos:
-                    for aluno in turma.alunos:
+
+                alunos_matriculados = [
+                    m.aluno
+                    for m in matriculas
+                    if m.turma.id_turma == turma.id_turma and m.status == "Ativa"
+                ]
+
+                if alunos_matriculados:
+                    for aluno in alunos_matriculados:
                         st.write(f"- {aluno.nome} (CPF: {aluno.cpf})")
                 else:
                     st.info("Nenhum aluno matriculado.")

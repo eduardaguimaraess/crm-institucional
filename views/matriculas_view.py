@@ -56,12 +56,21 @@ def mostrar_matriculas():
 
     if matricular:
         try:
+
             matricula = MatriculaController.realizar_matricula(
                 aluno,
                 turma
             )
 
             st.session_state.matriculas.append(matricula)
+
+            if not hasattr(aluno, "matriculas"):
+                aluno.matriculas = []
+            aluno.matriculas.append(matricula)
+
+            if not hasattr(turma, "matriculas"):
+                turma.matriculas = []
+            turma.matriculas.append(matricula)
 
             st.success("Matrícula realizada com sucesso!")
             st.rerun()

@@ -11,8 +11,12 @@ from data.csv_repository import (
 )
 
 
+
 def inicializar_estado():
 
+    # ===============================
+    # CARGA DOS DADOS (CSV)
+    # ===============================
     if "usuarios" not in st.session_state:
         st.session_state.usuarios = carregar_usuarios()
 
@@ -41,6 +45,22 @@ def inicializar_estado():
             st.session_state.turmas
         )
 
+    # ==================================================
+    # 🔗 LIGAR MATRÍCULAS AOS ALUNOS E TURMAS (AJUSTE CHAVE)
+    # ==================================================
+    for aluno in st.session_state.alunos:
+        aluno.matriculas = []
+
+    for turma in st.session_state.turmas:
+        turma.matriculas = []
+
+    for matricula in st.session_state.matriculas:
+        matricula.aluno.matriculas.append(matricula)
+        matricula.turma.matriculas.append(matricula)
+
+    # ===============================
+    # FREQUÊNCIAS
+    # ===============================
     if "frequencias" not in st.session_state:
         st.session_state.frequencias = carregar_frequencias(
             st.session_state.alunos,
@@ -48,9 +68,13 @@ def inicializar_estado():
             st.session_state.disciplinas
         )
 
+    # Garantia de lista
     if not isinstance(st.session_state.frequencias, list):
         st.session_state.frequencias = [st.session_state.frequencias]
 
+    # ===============================
+    # DESEMPENHOS
+    # ===============================
     if "desempenhos" not in st.session_state:
         st.session_state.desempenhos = carregar_desempenhos(
             st.session_state.alunos,
@@ -58,12 +82,18 @@ def inicializar_estado():
             st.session_state.disciplinas
         )
 
+    # ===============================
+    # NAVEGAÇÃO / LOGIN
+    # ===============================
     if "usuario_logado" not in st.session_state:
         st.session_state.usuario_logado = None
 
     if "pagina_atual" not in st.session_state:
         st.session_state.pagina_atual = "login"
 
+    # ===============================
+    # CONTADORES
+    # ===============================
     if "contador_usuarios" not in st.session_state:
         st.session_state.contador_usuarios = (
             max((u.id_usuario for u in st.session_state.usuarios), default=0) + 1
