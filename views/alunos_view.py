@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import date
 from controllers.aluno_controller import AlunoController
 from models.endereco import Endereco
 
@@ -7,6 +8,9 @@ def mostrar_alunos():
     st.title("👩‍🎓 Gestão de Alunos")
     st.markdown("Cadastro, visualização e atualização de alunos.")
     st.markdown("---")
+
+    hoje = date.today()
+    data_minima = date(hoje.year - 100, hoje.month, hoje.day)
 
     alunos = st.session_state.alunos
 
@@ -33,20 +37,27 @@ def mostrar_alunos():
                     nome = st.text_input("Nome", value=aluno.nome)
                     telefone = st.text_input("Telefone", value=aluno.telefone)
                     email = st.text_input("E-mail", value=aluno.email)
+
                     genero = st.selectbox(
                         "Gênero",
                         ["Masculino", "Feminino", "Outro"],
                         index=["Masculino", "Feminino", "Outro"].index(aluno.genero)
                         if aluno.genero in ["Masculino", "Feminino", "Outro"] else 0
                     )
+
                     data_nascimento = st.date_input(
                         "Data de nascimento",
-                        value=aluno.data_nascimento
+                        value=aluno.data_nascimento,
+                        min_value=data_minima,
+                        max_value=hoje,
+                        format="DD/MM/YYYY"
                     )
+
                     responsavel = st.text_input(
                         "Responsável",
                         value=aluno.responsavel
                     )
+
                     status = st.selectbox(
                         "Status",
                         ["Ativo", "Inativo"],
@@ -78,7 +89,6 @@ def mostrar_alunos():
                         st.rerun()
                     except ValueError as e:
                         st.error(str(e))
-
     else:
         st.info("Nenhum aluno cadastrado até o momento.")
 
@@ -90,18 +100,36 @@ def mostrar_alunos():
 
         nome = st.text_input("Nome completo")
         cpf = st.text_input("CPF", max_chars=11)
+        cpf = ''.join(filter(str.isdigit, cpf))
         email = st.text_input("E-mail")
         telefone = st.text_input("Telefone")
-        genero = st.selectbox("Gênero", ["Masculino", "Feminino", "Outro"])
-        data_nascimento = st.date_input("Data de nascimento")
+
+        genero = st.selectbox(
+            "Gênero",
+            ["Masculino", "Feminino", "Outro"]
+        )
+
+        data_nascimento = st.date_input(
+            "Data de nascimento",
+            min_value=data_minima,
+            max_value=hoje
+        )
+
         responsavel = st.text_input("Responsável")
 
         cadastrar = st.form_submit_button("Cadastrar aluno")
 
     if cadastrar:
-
         if not all([nome, cpf, email, telefone, responsavel]):
             st.error("Preencha todos os campos obrigatórios.")
+            return
+        
+        if not cpf.isdigit():
+            st.error("O CPF deve conter apenas números.")
+            return
+
+        if len(cpf) != 11:
+            st.error("O CPF deve ter exatamente 11 números.")
             return
 
         novo_id = st.session_state.contador_alunos

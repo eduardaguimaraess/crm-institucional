@@ -47,3 +47,9 @@ def inicializar_estado():
 
     if "contador_turmas" not in st.session_state:
         st.session_state.contador_turmas = 1
+        
+    if "contador_usuarios" not in st.session_state:
+        st.session_state.contador_usuarios = 1
+        
+    if "contador_enderecos" not in st.session_state:
+        st.session_state.contador_enderecos = 1
