@@ -1,5 +1,3 @@
-# controllers/disciplina_controller.py
-
 from services.disciplina_services import DisciplinaService
 
 class DisciplinaController:

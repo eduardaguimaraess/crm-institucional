@@ -1,0 +1,116 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+[data-testid="stVerticalBlock"] > div:has(div.stTitle) {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.05); 
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+[data-testid="stMarkdownContainer"] p {
+    text-align: center;
+}
+
+div[data-baseweb="input"] {
+    border-radius: 10px !important;
+}
+
+div.stButton > button[kind="primary"] {
+    background: linear-gradient(90deg, #5529B4 0%, #B861C6 100%) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-weight: bold !important;
+    height: 3.2rem !important;
+    transition: transform 0.2s ease;
+}
+
+div.stButton > button[kind="primary"]:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(85, 41, 180, 0.3);
+}
+
+div.stButton > button[kind="secondary"] {
+    border: 2px solid #5529B4 !important;
+    color: #5529B4 !important;
+    border-radius: 10px !important;
+    background-color: transparent !important;
+    height: 3.2rem !important;
+}
+
+div.stButton > button[kind="secondary"]:hover {
+    border-color: #B861C6 !important;
+    color: #B861C6 !important;
+}
+
+[data-testid="stVerticalBlock"] > div:has(div.stTitle), 
+.main .block-container {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    padding-top: 5rem !important;
+}
+
+.stButton button, .stTextInput input {
+    width: 100%;
+}
+
+h1, p {
+    text-align: center !important;
+}
+
+[data-testid="stForm"] {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(15px);
+    padding: 2rem !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    [data-testid="stForm"] {
+        background-color: rgba(20, 20, 20, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+button[kind="formSubmit"] {
+    background: linear-gradient(90deg, #5529B4 0%, #B861C6 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
+    width: 100% !important;
+    height: 3.2rem !important;
+    transition: transform 0.2s ease !important;
+}
+
+button[kind="formSubmit"]:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 15px rgba(85, 41, 180, 0.3) !important;
+}
+
+h3 {
+    color: #5529B4 !important;
+    margin-top: 1rem !important;
+    border-bottom: 2px solid rgba(184, 97, 198, 0.2);
+    padding-bottom: 5px;
+}
+
+div[data-baseweb="input"]:focus-within, 
+div[data-baseweb="select"]:focus-within, 
+textarea:focus {
+    border-color: #5529B4 !important;
+    box-shadow: 0 0 0 1px #5529B4 !important;
+}
+
+div[data-baseweb="select"] > div:focus-within {
+    border-color: #5529B4 !important;
+}
+
+input {
+    caret-color: #5529B4 !important;
+}
