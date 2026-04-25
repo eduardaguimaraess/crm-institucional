@@ -1,8 +1,8 @@
 # models/desempenho.py
 
 from datetime import date
-from aluno import Aluno
-from disciplina import Disciplina
+from models.aluno import Aluno
+from models.disciplina import Disciplina
 
 
 class Desempenho:

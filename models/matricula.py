@@ -1,5 +1,5 @@
-from aluno import Aluno
-from turma import Turma
+from models.aluno import Aluno
+from models.turma import Turma
 from datetime import date
 
 class Matricula:

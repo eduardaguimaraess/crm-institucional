@@ -1,7 +1,7 @@
 from datetime import date
-from aluno import Aluno
-from turma import Turma
-from disciplina import Disciplina
+from models.aluno import Aluno
+from models.turma import Turma
+from models.disciplina import Disciplina
 
 class Frequencia:
 

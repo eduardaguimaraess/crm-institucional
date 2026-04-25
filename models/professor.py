@@ -1,6 +1,5 @@
-from usuario import Usuario
+from models.usuario import Usuario
 
-# Classe Professor
 class Professor(Usuario):
 
     def __init__(self, id_usuario, nome, data_nascimento, cpf, genero,

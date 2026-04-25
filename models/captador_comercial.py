@@ -1,4 +1,4 @@
-from usuario import Usuario
+from models.usuario import Usuario
 
 # Classe responsável por captar novos alunos e responsáveis
 class CaptadorComercial(Usuario):

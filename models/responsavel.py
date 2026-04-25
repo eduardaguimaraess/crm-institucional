@@ -1,6 +1,5 @@
-from endereco import Endereco
+from models.endereco import Endereco
 
-# Classe Responsavel
 class Responsavel:
 
     def __init__(self, id_responsavel, nome, cpf, telefone, email, genero, endereco):

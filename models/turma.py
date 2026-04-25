@@ -1,9 +1,7 @@
-# models/turma.py
-
-from aluno import Aluno
-from curso import Curso
-from disciplina import Disciplina
-from professor import Professor
+from models.aluno import Aluno
+from models.curso import Curso
+from models.disciplina import Disciplina
+from models.professor import Professor
 
 
 class Turma:

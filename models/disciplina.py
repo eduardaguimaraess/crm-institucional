@@ -1,5 +1,5 @@
-from curso import Curso
-from professor import Professor
+from models.curso import Curso
+from models.professor import Professor
 
 class Disciplina:
 

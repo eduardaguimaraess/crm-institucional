@@ -1,4 +1,4 @@
-from endereco import Endereco
+from models.endereco import Endereco
 
 # Classe Aluno
 class Aluno:
