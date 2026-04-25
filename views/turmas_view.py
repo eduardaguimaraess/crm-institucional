@@ -9,7 +9,12 @@ def mostrar_turmas():
     turmas = st.session_state.turmas
     cursos = st.session_state.cursos
     disciplinas = st.session_state.disciplinas
-    professores = st.session_state.professores
+    usuarios = st.session_state.usuarios
+    professores = [
+        u for u in usuarios
+        if hasattr(u, "cargo") and u.cargo == "Professor"
+    ]
+
 
     if turmas:
         st.subheader("📋 Turmas cadastradas")

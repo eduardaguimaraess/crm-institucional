@@ -32,22 +32,28 @@ def mostrar_disciplinas():
                 with st.form(f"form_update_disciplina_{d.id_disciplina}"):
 
                     nome = st.text_input("Nome", value=d.nome)
+                
+                    curso_index = next(
+                        (i for i, c in enumerate(cursos) if c.id_curso == d.curso.id_curso),
+                        0
+                    )
 
                     curso = st.selectbox(
                         "Curso",
                         cursos,
-                        icurso_index = next(
-                            (i for i, c in enumerate(cursos) if c.id_curso == d.curso.id_curso),
-                            0
-                        ),
-
+                        index=curso_index,
                         format_func=lambda c: c.nome
+                    )
+                    
+                    professor_index = next(
+                        (i for i, p in enumerate(professores) if p.id_usuario == d.professor.id_usuario),
+                        0
                     )
 
                     professor = st.selectbox(
                         "Professor",
                         professores,
-                        index=professores.index(d.professor),
+                        index=professor_index,
                         format_func=lambda p: p.nome
                     )
 
