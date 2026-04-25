@@ -15,13 +15,14 @@ def mostrar_turmas():
     disciplinas = st.session_state.disciplinas
     usuarios = st.session_state.usuarios
 
+    # Professores derivados dos usuários
     professores = [
         u for u in usuarios
         if hasattr(u, "cargo") and u.cargo == "Professor"
     ]
 
     # ===============================
-    # LISTAGEM DE TURMAS
+    # LISTAGEM DAS TURMAS
     # ===============================
     if turmas:
         st.subheader("📋 Turmas cadastradas")
@@ -74,14 +75,13 @@ def mostrar_turmas():
 
         nome = st.text_input("Nome da turma")
 
-        # Seleção de curso
         curso = st.selectbox(
             "Curso",
             cursos,
             format_func=lambda c: c.nome
         )
 
-        # Filtra disciplinas PELO ID DO CURSO
+        # Disciplinas filtradas corretamente por ID do curso
         disciplinas_filtradas = [
             d for d in disciplinas
             if d.curso.id_curso == curso.id_curso
@@ -91,11 +91,9 @@ def mostrar_turmas():
             st.warning("Não há disciplinas cadastradas para este curso.")
             st.stop()
 
-        # Selectbox de disciplina com KEY dependente do curso
         disciplina = st.selectbox(
             "Disciplina",
             disciplinas_filtradas,
-            key=f"disciplina_{curso.id_curso}",
             format_func=lambda d: d.nome
         )
 

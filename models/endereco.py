@@ -1,37 +1,38 @@
+from sqlalchemy import Column, Integer, String
+from models.database import Base
 import requests
 
-# Classe Endereco
-class Endereco:
+class Endereco(Base):
+    __tablename__ = 'enderecos'
+    
+    id_endereco = Column(Integer, primary_key=True, autoincrement=True)
+    cep = Column(String)
+    logradouro = Column(String)
+    numero = Column(String)
+    bairro = Column(String)
+    complemento = Column(String)
+    cidade = Column(String)
+    estado = Column(String)
 
-    def __init__(self, id_endereco, cep, logradouro, numero, bairro, complemento=None):
-        self.id_endereco = id_endereco
+    def __init__(self, cep, logradouro, numero, bairro, complemento=None):
         self.cep = cep
-        self.logradouro = logradouro  # digitado pela pessoa
-        self.numero = numero          # digitado pela pessoa
-        self.bairro = bairro          # digitado pela pessoa
+        self.logradouro = logradouro
+        self.numero = numero
+        self.bairro = bairro
         self.complemento = complemento
-
-        # Preenchidos automaticamente
         self.cidade = ""
         self.estado = ""
-
-        # Busca dados do CEP
+        
+        # Chama a função para preencher cidade e estado antes de salvar
         self.buscar_cep()
 
-    # Busca cidade e estado pelo CEP
     def buscar_cep(self):
         try:
             url = f"https://viacep.com.br/ws/{self.cep}/json/"
             resposta = requests.get(url)
-
             if resposta.status_code == 200:
                 dados = resposta.json()
-
                 self.cidade = dados.get("localidade", "")
                 self.estado = dados.get("uf", "")
-
-            else:
-                print("Erro ao buscar CEP.")
-
         except Exception as e:
-            print("Erro na conexão:", e)
+            print("Erro na conexão ViaCEP:", e)
