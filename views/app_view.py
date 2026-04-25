@@ -6,9 +6,7 @@ from views.state_view import inicializar_estado
 from views.login_view import mostrar_login
 from views.cadastro_view import mostrar_cadastro
 from views.dashboard_view import mostrar_dashboard
-
 from views.components.sidebar import mostrar_sidebar
-
 from views.alunos_view import mostrar_alunos
 from views.cursos_view import mostrar_cursos
 from views.disciplinas_view import mostrar_disciplinas

@@ -7,6 +7,9 @@ def mostrar_turmas():
     st.markdown("Cadastro e visualização de turmas.")
     st.markdown("---")
 
+    # ==================================================
+    # DADOS DO ESTADO
+    # ==================================================
     turmas = st.session_state.turmas
     cursos = st.session_state.cursos
     disciplinas = st.session_state.disciplinas
@@ -18,6 +21,9 @@ def mostrar_turmas():
         if hasattr(u, "cargo") and u.cargo == "Professor"
     ]
 
+    # ==================================================
+    # LISTAGEM DAS TURMAS
+    # ==================================================
     if turmas:
         st.subheader("📋 Turmas cadastradas")
 

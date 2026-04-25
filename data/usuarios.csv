@@ -1,0 +1,6 @@
+id_usuario,nome,cpf,email,senha,data_nascimento,genero,cargo,telefone,cep,logradouro,numero,bairro
+1,Ana Paula Ribeiro,12345678901,ana@escola.com,1234,1988-05-14,Feminino,Administrador,31999990001,30130010,Rua das Flores,120,Centro
+2,Carlos Eduardo Lima,23456789012,carlos@escola.com,1234,1985-03-22,Masculino,Professor,31999990002,30140020,Avenida Brasil,450,Savassi
+3,Fernanda Alves Souza,34567890123,fernanda@escola.com,1234,1990-09-10,Feminino,Professor,31999990003,30150030,Rua São Paulo,98,Funcionários
+4,Lucas Henrique Gomes,45678901234,lucas@escola.com,1234,2002-01-18,Masculino,Captador Comercial,31999990004,30160040,Rua Afonso Pena,200,Centro
+5,Marina Costa Rocha,56789012345,marina@escola.com,1234,1995-11-02,Feminino,Captador Comercial,31999990005,30170050,Rua Goiás,75,Lourdes
