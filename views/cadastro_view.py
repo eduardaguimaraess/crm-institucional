@@ -55,7 +55,7 @@ def mostrar_cadastro():
             with col_info2:
                 cargo = st.selectbox("Cargo", ["Professor", "Administrador", "Captador Comercial"])
 
-            telefone = st.text_input("Telefone", placeholder="(DDD) 00000-0000")
+            telefone = st.text_input("Telefone", placeholder="(DDD) 00000-0000", max_chars=15)
 
             st.markdown("### <i class='fas fa-location-dot' style='font-size: 1.2rem;'></i> Endereço", unsafe_allow_html=True)
             
