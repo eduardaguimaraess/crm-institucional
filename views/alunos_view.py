@@ -9,11 +9,17 @@ def mostrar_alunos():
     st.markdown("Cadastro, visualização e atualização de alunos.")
     st.markdown("---")
 
+    # ===============================
+    # CONFIGURAÇÃO DE DATAS
+    # ===============================
     hoje = date.today()
     data_minima = date(hoje.year - 100, hoje.month, hoje.day)
 
     alunos = st.session_state.alunos
 
+    # ==================================================
+    # LISTAGEM E ATUALIZAÇÃO
+    # ==================================================
     if alunos:
         st.subheader("📋 Alunos cadastrados")
 
@@ -26,7 +32,7 @@ def mostrar_alunos():
                 st.write(f"**E-mail:** {aluno.email}")
                 st.write(f"**Telefone:** {aluno.telefone}")
                 st.write(f"**Gênero:** {aluno.genero}")
-                st.write(f"**Data de nascimento:** {aluno.data_nascimento}")
+                st.write(f"**Data de nascimento:** {aluno.data_nascimento.strftime('%d/%m/%Y')}")
                 st.write(f"**Responsável:** {aluno.responsavel}")
                 st.write(f"**Status:** {aluno.status}")
 
@@ -94,13 +100,18 @@ def mostrar_alunos():
 
     st.markdown("---")
 
+    # ==================================================
+    # CADASTRO DE NOVO ALUNO
+    # ==================================================
     st.subheader("➕ Cadastrar novo aluno")
 
     with st.form("form_cadastro_aluno"):
 
         nome = st.text_input("Nome completo")
+
         cpf = st.text_input("CPF", max_chars=11)
-        cpf = ''.join(filter(str.isdigit, cpf))
+        cpf = "".join(filter(str.isdigit, cpf))
+
         email = st.text_input("E-mail")
         telefone = st.text_input("Telefone")
 
@@ -112,7 +123,8 @@ def mostrar_alunos():
         data_nascimento = st.date_input(
             "Data de nascimento",
             min_value=data_minima,
-            max_value=hoje
+            max_value=hoje,
+            format="DD/MM/YYYY"
         )
 
         responsavel = st.text_input("Responsável")
@@ -120,10 +132,13 @@ def mostrar_alunos():
         cadastrar = st.form_submit_button("Cadastrar aluno")
 
     if cadastrar:
+        # ===============================
+        # VALIDAÇÕES
+        # ===============================
         if not all([nome, cpf, email, telefone, responsavel]):
             st.error("Preencha todos os campos obrigatórios.")
             return
-        
+
         if not cpf.isdigit():
             st.error("O CPF deve conter apenas números.")
             return
@@ -132,7 +147,19 @@ def mostrar_alunos():
             st.error("O CPF deve ter exatamente 11 números.")
             return
 
+        # ===============================
+        # GERAÇÃO DE IDS
+        # ===============================
         novo_id = st.session_state.contador_alunos
+        id_endereco = st.session_state.contador_enderecos
+
+        endereco = Endereco(
+            id_endereco=id_endereco,
+            cep="00000000",
+            logradouro="Não informado",
+            numero="S/N",
+            bairro="Não informado"
+        )
 
         dados = {
             "id_aluno": novo_id,
@@ -142,7 +169,7 @@ def mostrar_alunos():
             "genero": genero,
             "telefone": telefone,
             "email": email,
-            "endereco": Endereco(),
+            "endereco": endereco,
             "responsavel": responsavel
         }
 
@@ -152,6 +179,7 @@ def mostrar_alunos():
                 st.session_state.alunos
             )
             st.session_state.contador_alunos += 1
+            st.session_state.contador_enderecos += 1
             st.success("Aluno cadastrado com sucesso!")
             st.rerun()
         except ValueError as e:

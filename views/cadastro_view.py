@@ -2,124 +2,126 @@ import streamlit as st
 from datetime import date
 from controllers.usuario_controller import UsuarioController
 from models.endereco import Endereco
-
+from views.styles.style_loader import carregar_css
 
 def mostrar_cadastro():
-    st.title("📝 Cadastro de Usuário")
-    st.markdown("Crie uma nova conta para acessar o sistema.")
-    st.markdown("---")
 
-    hoje = date.today()
-    data_minima = date(hoje.year - 100, hoje.month, hoje.day)
+    carregar_css("views/styles/theme.css")
 
-    with st.form("form_cadastro_usuario"):
 
-        nome = st.text_input("Nome completo")
-        cpf = st.text_input("CPF", max_chars=11)
-        cpf = ''.join(filter(str.isdigit, cpf))
-        email = st.text_input("E-mail")
-        senha = st.text_input("Senha", type="password")
-        confirmar_senha = st.text_input("Confirmar senha", type="password")
+    margem_esq, centro, margem_dir = st.columns([0.5, 2, 0.5])
 
-        data_nascimento = st.date_input(
-            "Data de nascimento",
-            min_value=data_minima,
-            max_value=hoje,
-            format="DD/MM/YYYY"
+    with centro:
 
-        )
-
-        genero = st.selectbox(
-            "Gênero",
-            ["Masculino", "Feminino", "Outro"]
-        )
-
-        telefone = st.text_input("Telefone")
-
-        cargo = st.selectbox(
-            "Cargo",
-            ["Aluno", "Professor", "Administrador"]
-        )
-
-        st.markdown("### Endereço")
-
-        cep = st.text_input("CEP", max_chars=8)
-        cep = ''.join(filter(str.isdigit, cep))
-        logradouro = st.text_input("Logradouro (Rua/Avenida)")
-        numero = st.text_input("Número")
-        bairro = st.text_input("Bairro")
-
-        cadastrar = st.form_submit_button("Cadastrar")
-
-    if cadastrar:
-
-        if not all([
-            nome, cpf, email, senha, telefone, genero, cargo, data_nascimento,
-            cep, logradouro, numero, bairro
-        ]):
-            st.error("Preencha todos os campos obrigatórios.")
-            return
-
-        if senha != confirmar_senha:
-            st.error("As senhas não coincidem.")
-            return
-    
-        if not cpf.isdigit():
-            st.error("O CPF deve conter apenas números.")
-            return
-
-        if not cep.isdigit():
-            st.error("O CEP deve conter apenas números.")
-            return
-
-        if len(cpf) != 11:
-            st.error("O CPF deve ter exatamente 11 números.")
-            return
+        st.markdown("""
+            <h1 style='text-align: center;'>
+                <i class="fas fa-pen-to-square" style="color: #B861C6; margin-right: 10px;"></i>Cadastro
+            </h1>
+        """, unsafe_allow_html=True)
         
-        if len(cep) != 8:
-            st.error("O CEP deve ter exatamente 8 números.")
-            return
+        st.markdown("<p style='text-align: center;'>Crie uma nova conta para acessar o sistema.</p>", unsafe_allow_html=True)
 
-        id_usuario = st.session_state.contador_usuarios
-        id_endereco = st.session_state.contador_enderecos
+        hoje = date.today()
+        data_minima = date(hoje.year - 100, hoje.month, hoje.day)
 
-        endereco = Endereco(
-            id_endereco=id_endereco,
-            cep=cep,
-            logradouro=logradouro,
-            numero=numero,
-            bairro=bairro
-        )
+        with st.form("form_cadastro_usuario"):
 
-        dados = {
-            "id_usuario": id_usuario,
-            "nome": nome,
-            "cpf": cpf,
-            "email": email,
-            "senha": senha,
-            "data_nascimento": data_nascimento,
-            "genero": genero,
-            "telefone": telefone,
-            "cargo": cargo,
-            "endereco": endereco
-        }
+            st.markdown("### <i class='fas fa-user' style='font-size: 1.2rem;'></i> Dados Pessoais", unsafe_allow_html=True)
+            
+            nome = st.text_input("Nome completo")
+            
+            col_doc1, col_doc2 = st.columns(2)
+            with col_doc1:
+                cpf = st.text_input("CPF", max_chars=11, placeholder="Apenas números")
+            with col_doc2:
+                data_nascimento = st.date_input(
+                    "Nascimento",
+                    min_value=data_minima,
+                    max_value=hoje,
+                    format="DD/MM/YYYY"
+                )
 
-        try:
-            UsuarioController.cadastrar_usuario(
-                dados,
-                st.session_state.usuarios
-            )
+            email = st.text_input("E-mail")
+            
+            col_pass1, col_pass2 = st.columns(2)
+            with col_pass1:
+                senha = st.text_input("Senha", type="password")
+            with col_pass2:
+                confirmar_senha = st.text_input("Confirmar senha", type="password")
 
-            st.session_state.contador_usuarios += 1
-            st.session_state.contador_enderecos += 1
+            col_info1, col_info2 = st.columns(2)
+            with col_info1:
+                genero = st.selectbox("Gênero", ["Masculino", "Feminino", "Outro"])
+            with col_info2:
+                cargo = st.selectbox("Cargo", ["Aluno", "Professor", "Administrador", "Captador Comercial"])
 
-            st.success("Usuário cadastrado com sucesso!")
+            telefone = st.text_input("Telefone", placeholder="(DDD) 00000-0000")
+
+            st.markdown("### <i class='fas fa-location-dot' style='font-size: 1.2rem;'></i> Endereço", unsafe_allow_html=True)
+            
+            col_end1, col_end2 = st.columns([1, 2])
+            with col_end1:
+                cep = st.text_input("CEP", max_chars=8)
+            with col_end2:
+                logradouro = st.text_input("Logradouro (Rua/Avenida)")
+
+            col_end3, col_end4 = st.columns([1, 2])
+            with col_end3:
+                numero = st.text_input("Número")
+            with col_end4:
+                bairro = st.text_input("Bairro")
+
+            st.write("") 
+            
+            cadastrar = st.form_submit_button("Finalizar Cadastro")
+
+        if cadastrar:
+            cpf_limpo = ''.join(filter(str.isdigit, cpf))
+            cep_limpo = ''.join(filter(str.isdigit, cep))
+
+            if not all([nome, cpf_limpo, email, senha, telefone, genero, cargo, data_nascimento, cep_limpo, logradouro, numero, bairro]):
+                st.error("Preencha todos os campos obrigatórios.")
+            elif senha != confirmar_senha:
+                st.error("As senhas não coincidem.")
+            elif len(cpf_limpo) != 11:
+                st.error("O CPF deve ter 11 números.")
+            elif len(cep_limpo) != 8:
+                st.error("O CEP deve ter 8 números.")
+            else:
+                try:
+                    id_usuario = st.session_state.contador_usuarios
+                    id_endereco = st.session_state.contador_enderecos
+
+                    endereco = Endereco(
+                        id_endereco=id_endereco,
+                        cep=cep_limpo,
+                        logradouro=logradouro,
+                        numero=numero,
+                        bairro=bairro
+                    )
+
+                    dados = {
+                        "id_usuario": id_usuario,
+                        "nome": nome,
+                        "cpf": cpf_limpo,
+                        "email": email,
+                        "senha": senha,
+                        "data_nascimento": data_nascimento,
+                        "genero": genero,
+                        "telefone": telefone,
+                        "cargo": cargo,
+                        "endereco": endereco
+                    }
+
+                    UsuarioController.cadastrar_usuario(dados, st.session_state.usuarios)
+                    st.session_state.contador_usuarios += 1
+                    st.session_state.contador_enderecos += 1
+                    st.success("Usuário cadastrado com sucesso!")
+                    st.session_state.pagina_atual = "login"
+                    st.rerun()
+                except ValueError as erro:
+                    st.error(str(erro))
+
+        if st.button("Voltar para login", use_container_width=True):
             st.session_state.pagina_atual = "login"
             st.rerun()
-
-        except ValueError as erro:
-            st.error(str(erro))
-
-    if st.button("Voltar para login"):
-        st.session_state.pagina_atual = "login"
-        st.rerun()

@@ -9,7 +9,11 @@ def mostrar_disciplinas():
 
     disciplinas = st.session_state.disciplinas
     cursos = st.session_state.cursos
-    professores = st.session_state.professores
+    usuarios = st.session_state.usuarios
+    professores = [
+        u for u in usuarios
+        if hasattr(u, "cargo") and u.cargo == "Professor"
+    ]
 
     if disciplinas:
         st.subheader("📋 Disciplinas cadastradas")
@@ -32,7 +36,11 @@ def mostrar_disciplinas():
                     curso = st.selectbox(
                         "Curso",
                         cursos,
-                        index=cursos.index(d.curso),
+                        icurso_index = next(
+                            (i for i, c in enumerate(cursos) if c.id_curso == d.curso.id_curso),
+                            0
+                        ),
+
                         format_func=lambda c: c.nome
                     )
 
