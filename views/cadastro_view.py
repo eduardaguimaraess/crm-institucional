@@ -53,7 +53,7 @@ def mostrar_cadastro():
             with col_info1:
                 genero = st.selectbox("Gênero", ["Masculino", "Feminino", "Outro"])
             with col_info2:
-                cargo = st.selectbox("Cargo", ["Aluno", "Professor", "Administrador", "Captador Comercial"])
+                cargo = st.selectbox("Cargo", ["Professor", "Administrador", "Captador Comercial"])
 
             telefone = st.text_input("Telefone", placeholder="(DDD) 00000-0000")
 
