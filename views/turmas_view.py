@@ -7,23 +7,23 @@ def mostrar_turmas():
     st.markdown("Cadastro e visualização de turmas.")
     st.markdown("---")
 
-    # ===============================
+    # ==================================================
     # DADOS DO ESTADO
-    # ===============================
+    # ==================================================
     turmas = st.session_state.turmas
     cursos = st.session_state.cursos
     disciplinas = st.session_state.disciplinas
     usuarios = st.session_state.usuarios
 
-    # Professores derivados dos usuários
+    # Professores são usuários com cargo "Professor"
     professores = [
         u for u in usuarios
         if hasattr(u, "cargo") and u.cargo == "Professor"
     ]
 
-    # ===============================
+    # ==================================================
     # LISTAGEM DAS TURMAS
-    # ===============================
+    # ==================================================
     if turmas:
         st.subheader("📋 Turmas cadastradas")
 
@@ -54,9 +54,9 @@ def mostrar_turmas():
 
     st.markdown("---")
 
-    # ===============================
+    # ==================================================
     # CADASTRO DE NOVA TURMA
-    # ===============================
+    # ==================================================
     st.subheader("➕ Cadastrar nova turma")
 
     if not cursos:
@@ -71,53 +71,59 @@ def mostrar_turmas():
         st.warning("Cadastre um professor antes de criar turmas.")
         return
 
+    # --------------------------------------------------
+    # CAMPOS DEPENDENTES (FORA DO FORM)
+    # --------------------------------------------------
+    nome = st.text_input("Nome da turma")
+
+    curso = st.selectbox(
+        "Curso",
+        cursos,
+        format_func=lambda c: c.nome
+    )
+
+    # Filtra disciplinas APENAS do curso selecionado
+    disciplinas_filtradas = [
+        d for d in disciplinas
+        if d.curso.id_curso == curso.id_curso
+    ]
+
+    if not disciplinas_filtradas:
+        st.warning("Não há disciplinas cadastradas para este curso.")
+        return
+
+    disciplina = st.selectbox(
+        "Disciplina",
+        disciplinas_filtradas,
+        key=f"disciplina_{curso.id_curso}",
+        format_func=lambda d: d.nome
+    )
+
+    professor = st.selectbox(
+        "Professor",
+        professores,
+        format_func=lambda p: p.nome
+    )
+
+    horario = st.text_input(
+        "Horário (ex: Segunda 19:00 - 21:00)"
+    )
+
+    vagas = st.number_input(
+        "Número de vagas",
+        min_value=1,
+        step=1
+    )
+
+    # --------------------------------------------------
+    # FORM APENAS PARA SUBMIT
+    # --------------------------------------------------
     with st.form("form_cadastro_turma"):
-
-        nome = st.text_input("Nome da turma")
-
-        curso = st.selectbox(
-            "Curso",
-            cursos,
-            format_func=lambda c: c.nome
-        )
-
-        # Disciplinas filtradas corretamente por ID do curso
-        disciplinas_filtradas = [
-            d for d in disciplinas
-            if d.curso.id_curso == curso.id_curso
-        ]
-
-        if not disciplinas_filtradas:
-            st.warning("Não há disciplinas cadastradas para este curso.")
-            st.stop()
-
-        disciplina = st.selectbox(
-            "Disciplina",
-            disciplinas_filtradas,
-            format_func=lambda d: d.nome
-        )
-
-        professor = st.selectbox(
-            "Professor",
-            professores,
-            format_func=lambda p: p.nome
-        )
-
-        horario = st.text_input(
-            "Horário (ex: Segunda 19:00 - 21:00)"
-        )
-
-        vagas = st.number_input(
-            "Número de vagas",
-            min_value=1,
-            step=1
-        )
-
         cadastrar = st.form_submit_button("Cadastrar turma")
 
-    # ===============================
+    # ==================================================
     # SALVAR TURMA
-    # ===============================
+    # ==================================================
     if cadastrar:
         novo_id = st.session_state.contador_turmas
 

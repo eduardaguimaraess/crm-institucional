@@ -1,23 +1,33 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
-from models.database import Base
+from usuario import Usuario
 
-class Admin(Base):
-    __tablename__ = 'admins'
-    
-    # O id_usuario vem da tabela Usuario (Herança no banco)
-    id_admin = Column(Integer, primary_key=True, autoincrement=True)
-    nome = Column(String)
-    cpf = Column(String)
-    email = Column(String)
-    salario = Column(Float)
-    data_admissao = Column(String)
-    cargo = Column(String, default="admin_diretor")
-    status_ativo = Column(String, default="True")
+class Admin(Usuario):
+    """
+    Classe Admin
+    Responsável por gerenciar usuários no sistema.
+    """
 
-    def __init__(self, nome, cpf, email, salario, data_admissao, cargo="admin_diretor"):
-        self.nome = nome
-        self.cpf = cpf
-        self.email = email
+    def __init__(self, id_usuario, nome, data_nascimento, cpf, genero,
+                 telefone, email, senha,
+                 id_admin, salario, data_admissao,
+                 cargo="admin_diretor", ativo=True):
+
+        super().__init__(
+            id_usuario, nome, data_nascimento, cpf,
+            genero, telefone, email, senha,
+            cargo, ativo
+        )
+
+        self.id_admin = id_admin
         self.salario = salario
         self.data_admissao = data_admissao
-        self.cargo = cargo
+
+    def desativar_usuario(self, usuario):
+        if not self.ativo:
+            print("Admin inativo não pode realizar ações.")
+            return
+
+        if usuario.ativo:
+            usuario.desativar()
+            print(f"Usuário {usuario.nome} desativado com sucesso.")
+        else:
+            print("Usuário já está desativado.")

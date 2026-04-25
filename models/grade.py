@@ -2,8 +2,9 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
+from models.turma import Turma
+from models.disciplina import Disciplina
 
-# Não precisamos de Base aqui porque essa classe não vira tabela no banco
 class GradePDF:
     def __init__(self, disciplinas, nome_curso):
         self.disciplinas = disciplinas
@@ -25,9 +26,8 @@ class GradePDF:
         for h in horarios:
             linha = [h]
             for dia in dias[1:]:
-                # Filtra as disciplinas que batem com o dia e horário
                 disc = [
-                    d.nome for d in self.disciplinas 
+                    d.nome for d in self.disciplinas
                     if d.dia_semana == dia and f"{d.hora_inicio}-{d.hora_fim}" == h
                 ]
                 linha.append(disc[0] if disc else "")
