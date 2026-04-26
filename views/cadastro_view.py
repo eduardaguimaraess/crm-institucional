@@ -5,14 +5,11 @@ from models.endereco import Endereco
 from views.styles.style_loader import carregar_css
 
 def mostrar_cadastro():
-
     carregar_css("views/styles/theme.css")
-
 
     margem_esq, centro, margem_dir = st.columns([0.5, 2, 0.5])
 
     with centro:
-
         st.markdown("""
             <h1 style='text-align: center;'>
                 <i class="fas fa-pen-to-square" style="color: #B861C6; margin-right: 10px;"></i>Cadastro
@@ -25,7 +22,6 @@ def mostrar_cadastro():
         data_minima = date(hoje.year - 100, hoje.month, hoje.day)
 
         with st.form("form_cadastro_usuario"):
-
             st.markdown("### <i class='fas fa-user' style='font-size: 1.2rem;'></i> Dados Pessoais", unsafe_allow_html=True)
             
             nome = st.text_input("Nome completo")
@@ -34,12 +30,7 @@ def mostrar_cadastro():
             with col_doc1:
                 cpf = st.text_input("CPF", max_chars=11, placeholder="Apenas números")
             with col_doc2:
-                data_nascimento = st.date_input(
-                    "Nascimento",
-                    min_value=data_minima,
-                    max_value=hoje,
-                    format="DD/MM/YYYY"
-                )
+                data_nascimento = st.date_input("Nascimento", min_value=data_minima, max_value=hoje, format="DD/MM/YYYY")
 
             email = st.text_input("E-mail")
             
@@ -72,8 +63,7 @@ def mostrar_cadastro():
                 bairro = st.text_input("Bairro")
 
             st.write("") 
-            
-            cadastrar = st.form_submit_button("Finalizar Cadastro")
+            cadastrar = st.form_submit_button("Finalizar Cadastro", use_container_width=True)
 
         if cadastrar:
             cpf_limpo = ''.join(filter(str.isdigit, cpf))
@@ -89,11 +79,11 @@ def mostrar_cadastro():
                 st.error("O CEP deve ter 8 números.")
             else:
                 try:
-                    id_usuario = st.session_state.contador_usuarios
-                    id_endereco = st.session_state.contador_enderecos
-
-                    endereco = Endereco(
-                        id_endereco=id_endereco,
+                    # Gerar IDs baseados no tamanho da lista atual para evitar duplicatas
+                    id_novo = len(st.session_state.usuarios) + 1
+                    
+                    endereco_obj = Endereco(
+                        id_endereco=id_novo,
                         cep=cep_limpo,
                         logradouro=logradouro,
                         numero=numero,
@@ -101,7 +91,7 @@ def mostrar_cadastro():
                     )
 
                     dados = {
-                        "id_usuario": id_usuario,
+                        "id_usuario": id_novo,
                         "nome": nome,
                         "cpf": cpf_limpo,
                         "email": email,
@@ -110,12 +100,12 @@ def mostrar_cadastro():
                         "genero": genero,
                         "telefone": telefone,
                         "cargo": cargo,
-                        "endereco": endereco
+                        "endereco": endereco_obj
                     }
 
+                    # O Controller agora salva no CSV e atualiza a memória
                     UsuarioController.cadastrar_usuario(dados, st.session_state.usuarios)
-                    st.session_state.contador_usuarios += 1
-                    st.session_state.contador_enderecos += 1
+                    
                     st.success("Usuário cadastrado com sucesso!")
                     st.session_state.pagina_atual = "login"
                     st.rerun()

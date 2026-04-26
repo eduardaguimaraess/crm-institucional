@@ -1,4 +1,2 @@
-id_desempenho,id_aluno,id_turma,id_disciplina,tipo,valor,data
-4,3,2,2,prova,90,2025-02-22
-5,3,2,2,trabalho,88,2025-02-27
-6,4,3,4,recuperacao,70,2025-03-01
+aluno,disciplina
+2,12

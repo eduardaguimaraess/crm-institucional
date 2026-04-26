@@ -11,54 +11,77 @@ class FrequenciaService:
     def registrar_presenca(
         aluno: Aluno,
         turma: Turma,
-        disciplina: Disciplina,
-        data: date = None
+        data: date = None,
+        presente: bool = True,
+        lista_frequencias: list = None,
+        **kwargs  # Captura argumentos extras (como disciplina) para não quebrar
     ) -> Frequencia:
-
+        """
+        Cria o objeto de frequência e o registra tanto no Aluno quanto na lista Global.
+        """
         data = data or date.today()
 
-        # garante lista de frequências no aluno
+        # 1. GarantE que a lista de frequências no aluno exista (Memória Local)
         if not hasattr(aluno, "frequencias"):
             aluno.frequencias = []
 
+        # 2. CriaR a instância da Frequencia
+        # Busca a disciplina diretamente da turma para evitar inconsistência
         frequencia = Frequencia(
             aluno=aluno,
             turma=turma,
-            disciplina=disciplina,
-            data=data,
-            presente=True
+            disciplina=turma.disciplina if hasattr(turma, 'disciplina') else None,
+            data=data
         )
+        
+        # 3. Definir status e ID
+        frequencia.presente = presente
+        
+        # Gerar ID baseado na lista global, se fornecida
+        if lista_frequencias is not None:
+            novo_id = max([f.id_frequencia for f in lista_frequencias], default=0) + 1
+            frequencia.id_frequencia = novo_id
+            # Adiciona na lista global (Session State)
+            lista_frequencias.append(frequencia)
 
+        # 4. Adiciona na lista do objeto Aluno
         aluno.frequencias.append(frequencia)
+        
         return frequencia
 
     @staticmethod
     def registrar_falta(
         aluno: Aluno,
         turma: Turma,
-        disciplina: Disciplina,
-        data: date = None
+        data: date = None,
+        lista_frequencias: list = None
     ) -> Frequencia:
-
-        frequencia = FrequenciaService.registrar_presenca(
-            aluno, turma, disciplina, data
+        """
+        Atalho para registrar falta reutilizando a lógica de presença.
+        """
+        return FrequenciaService.registrar_presenca(
+            aluno=aluno,
+            turma=turma,
+            data=data,
+            presente=False,
+            lista_frequencias=lista_frequencias
         )
-        frequencia.marcar_falta()
-        return frequencia
 
     @staticmethod
     def calcular_percentual(
         aluno: Aluno,
-        disciplina: Disciplina
+        turma: Turma = None
     ) -> float:
-
-        if not hasattr(aluno, "frequencias"):
+        """
+        Calcula o percentual de presença baseado nas frequências registradas.
+        """
+        if not hasattr(aluno, "frequencias") or not aluno.frequencias:
             return 0.0
 
-        registros = [
-            f for f in aluno.frequencias
-            if f.disciplina == disciplina
-        ]
+        # Filtrar registros por turma, se especificado
+        registros = aluno.frequencias
+        if turma:
+            registros = [f for f in registros if f.turma.id_turma == turma.id_turma]
 
         if not registros:
             return 0.0

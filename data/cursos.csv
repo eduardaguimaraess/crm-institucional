@@ -1,9 +1,11 @@
 id_curso,nome,carga_horaria,valor,ativo
-1,Técnico em Informática,1200,1800.00,True
-2,Técnico em Desenvolvimento de Sistemas,1400,2100.00,True
-3,Técnico em Administração,1000,1500.00,True
-4,Técnico em Eletrotécnica,1600,2300.00,True
-5,Técnico em Mecânica,1500,2200.00,True
-6,Técnico em Enfermagem,1800,2500.00,True
-7,Técnico em Segurança do Trabalho,1100,1700.00,True
-8,Técnico em Logística,900,1400.00,False
+1,Técnico em Informática,1200,1800.0,True
+2,Técnico em Desenvolvimento de Sistemas,1400,2100.0,True
+3,Técnico em Administração,1000,1500.0,True
+4,Técnico em Eletrotécnica,1600,2300.0,True
+5,Técnico em Mecânica,1500,2200.0,True
+6,Técnico em Enfermagem,1800,2500.0,True
+7,Técnico em Segurança do Trabalho,1100,1700.0,True
+8,Técnico em Logística,900,1400.0,False
+9,Técnico em Design Gráfico,3000,2500.0,True
+10,Técnico em Produção Multimídia,1600,1340.0,True

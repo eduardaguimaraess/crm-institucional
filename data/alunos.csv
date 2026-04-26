@@ -1,4 +1,6 @@
-id_aluno,nome,cpf,email,telefone,genero,data_nascimento,responsavel,cep,logradouro,numero,bairro,Centro
-2,Ana Carolina Lopes,22233344455,anacarolina@aluno.com,31988882222,Feminino,2006-07-02,Paulo Lopes,30140020,Avenida Brasil,102,Savassi
-3,Lucas Henrique Rocha,33344455566,lucasrocha@aluno.com,31988883333,Masculino,2004-11-25,Ricardo Rocha,30150030,Rua São Paulo,210,Funcionários
-4,Mariana Alves Costa,44455566677,marianacosta@aluno.com,31988884444,Feminino,2007-01-14,Juliana Costa,30160040,Rua Afonso Pena,88,Centro
+id_aluno,nome,data_nascimento,cpf,genero,telefone,email,responsavel,status,id_endereco,cep,logradouro,numero,bairro
+2,Ana Carolina Lopes,2006-07-02,22233344455,Feminino,31988882222,anacarolina@aluno.com,Paulo Lopes,Ativo,2,30140020,Avenida Brasil,102,Savassi
+3,Lucas Henrique Rocha,2004-11-25,33344455566,Masculino,31988883333,lucasrocha@aluno.com,Ricardo Rocha,Ativo,3,30150030,Rua São Paulo,210,Funcionários
+4,Mariana Alves Costa,2007-01-14,44455566677,Feminino,31988884444,marianacosta@aluno.com,Juliana Costa,Ativo,4,30160040,Rua Afonso Pena,88,Centro
+5,Wilde Salvador,2006-04-23,12345654332,Masculino,22999999999,wilde@gmail.com,Hisalana Gomes,Ativo,5,00000000,Não informado,S/N,Não informado
+6,Jennie Ruby ,2007-04-03,12345678954,Feminino,229999676788,jennie@email.com,Lalisa Manoban,Ativo,6,00000000,Não informado,S/N,Não informado

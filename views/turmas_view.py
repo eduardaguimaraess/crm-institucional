@@ -10,6 +10,17 @@ def mostrar_turmas():
     # ==================================================
     # DADOS DO ESTADO
     # ==================================================
+    if 'turmas' not in st.session_state:
+        st.session_state.turmas = []
+    if 'cursos' not in st.session_state:
+        st.session_state.cursos = []
+    if 'disciplinas' not in st.session_state:
+        st.session_state.disciplinas = []
+    if 'usuarios' not in st.session_state:
+        st.session_state.usuarios = []
+    if 'matriculas' not in st.session_state:
+        st.session_state.matriculas = []
+
     turmas = st.session_state.turmas
     cursos = st.session_state.cursos
     disciplinas = st.session_state.disciplinas
@@ -23,7 +34,7 @@ def mostrar_turmas():
     ]
 
     # ==================================================
-    # LISTAGEM DAS TURMAS
+    # LISTAGEM E ATUALIZAÇÃO DAS TURMAS
     # ==================================================
     if turmas:
         st.subheader("📋 Turmas cadastradas")
@@ -42,17 +53,72 @@ def mostrar_turmas():
                 st.write(f"**Professor:** {turma.professor.nome}")
                 st.write(f"**Horário:** {turma.horario}")
                 st.write(f"**Vagas disponíveis:** {turma.vagas}")
-                st.write(f"**Status:** {turma.status}")
+                st.write(f"**Status atual:** {turma.status}")
+
+                # --- ÁREA DE EDIÇÃO ---
+                st.markdown("#### ✏️ Editar Turma")
+                with st.form(f"form_update_turma_{turma.id_turma}"):
+                    nome_up = st.text_input("Nome da turma", value=turma.nome)
+                    
+                    try:
+                        prof_idx = professores.index(turma.professor)
+                    except (ValueError, AttributeError):
+                        prof_idx = 0
+
+                    professor_up = st.selectbox(
+                        "Professor", 
+                        professores, 
+                        index=prof_idx, 
+                        format_func=lambda p: p.nome,
+                        key=f"sel_prof_{turma.id_turma}"
+                    )
+                    
+                    horario_up = st.text_input("Horário", value=turma.horario)
+                    vagas_up = st.number_input("Vagas", min_value=1, value=turma.vagas)
+                    
+                    # Lista expandida para evitar erro de index com 'Inativa' ou outros
+                    opcoes_status = ["Ativa", "Inativa", "Encerrada", "Cancelada"]
+                    try:
+                        status_idx = opcoes_status.index(turma.status)
+                    except ValueError:
+                        status_idx = 0
+
+                    status_up = st.selectbox(
+                        "Status",
+                        opcoes_status,
+                        index=status_idx
+                    )
+
+                    btn_atualizar = st.form_submit_button("Salvar Alterações")
+
+                if btn_atualizar:
+                    dados_up = {
+                        "id_turma": turma.id_turma,
+                        "nome": nome_up,
+                        "curso": turma.curso,
+                        "disciplina": turma.disciplina,
+                        "professor": professor_up,
+                        "horario": horario_up,
+                        "vagas": vagas_up,
+                        "status": status_up
+                    }
+                    try:
+                        TurmaController.atualizar_turma(dados_up, st.session_state.turmas)
+                        st.success("Turma atualizada com sucesso!")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(str(e))
 
                 # ==========================================
-                # ALUNOS MATRICULADOS (DERIVADO DAS MATRÍCULAS)
+                # ALUNOS MATRICULADOS
                 # ==========================================
+                st.markdown("---")
                 st.markdown("**Alunos matriculados:**")
 
                 alunos_matriculados = [
                     m.aluno
                     for m in matriculas
-                    if m.turma.id_turma == turma.id_turma and m.status == "Ativa"
+                    if hasattr(m, "turma") and m.turma.id_turma == turma.id_turma and m.status == "Ativa"
                 ]
 
                 if alunos_matriculados:
@@ -82,79 +148,67 @@ def mostrar_turmas():
         st.warning("Cadastre um professor antes de criar turmas.")
         return
 
-    # --------------------------------------------------
-    # CAMPOS DEPENDENTES (FORA DO FORM)
-    # --------------------------------------------------
-    nome = st.text_input("Nome da turma")
+    # Campos fora do form para manter a reatividade da filtragem
+    nome_novo = st.text_input("Nome da nova turma")
 
-    curso = st.selectbox(
-        "Curso",
+    curso_novo = st.selectbox(
+        "Selecionar Curso",
         cursos,
-        format_func=lambda c: c.nome
+        format_func=lambda c: c.nome,
+        key="new_turma_curso_sel"
     )
 
-    # Filtra disciplinas APENAS do curso selecionado
     disciplinas_filtradas = [
         d for d in disciplinas
-        if d.curso.id_curso == curso.id_curso
+        if d.curso.id_curso == curso_novo.id_curso
     ]
 
     if not disciplinas_filtradas:
-        st.warning("Não há disciplinas cadastradas para este curso.")
-        return
+        st.warning("Não há disciplinas para este curso.")
+    else:
+        disciplina_nova = st.selectbox(
+            "Selecionar Disciplina",
+            disciplinas_filtradas,
+            format_func=lambda d: d.nome,
+            key="new_turma_disc_sel"
+        )
 
-    disciplina = st.selectbox(
-        "Disciplina",
-        disciplinas_filtradas,
-        key=f"disciplina_{curso.id_curso}",
-        format_func=lambda d: d.nome
-    )
+        professor_novo = st.selectbox(
+            "Selecionar Professor",
+            professores,
+            format_func=lambda p: p.nome,
+            key="new_turma_prof_sel"
+        )
 
-    professor = st.selectbox(
-        "Professor",
-        professores,
-        format_func=lambda p: p.nome
-    )
+        horario_novo = st.text_input("Horário", key="new_turma_horario")
+        vagas_nova = st.number_input("Número de vagas", min_value=1, step=1, value=20)
 
-    horario = st.text_input(
-        "Horário (ex: Segunda 19:00 - 21:00)"
-    )
+        # Form apenas para o botão de submissão
+        with st.form("form_cadastro_turma"):
+            cadastrar = st.form_submit_button("Confirmar Cadastro")
 
-    vagas = st.number_input(
-        "Número de vagas",
-        min_value=1,
-        step=1
-    )
+        if cadastrar:
+            if not nome_novo or not horario_novo:
+                st.error("Preencha todos os campos obrigatórios.")
+            else:
+                dados_cadastro = {
+                    "id_turma": st.session_state.get('contador_turmas', 0),
+                    "nome": nome_novo,
+                    "curso": curso_novo,
+                    "disciplina": disciplina_nova,
+                    "professor": professor_novo,
+                    "horario": horario_novo,
+                    "vagas": vagas_nova,
+                    "status": "Ativa"
+                }
 
-    # --------------------------------------------------
-    # FORM APENAS PARA SUBMIT
-    # --------------------------------------------------
-    with st.form("form_cadastro_turma"):
-        cadastrar = st.form_submit_button("Cadastrar turma")
-
-    # ==================================================
-    # SALVAR TURMA
-    # ==================================================
-    if cadastrar:
-        novo_id = st.session_state.contador_turmas
-
-        dados = {
-            "id_turma": novo_id,
-            "nome": nome,
-            "curso": curso,
-            "disciplina": disciplina,
-            "professor": professor,
-            "horario": horario,
-            "vagas": vagas
-        }
-
-        try:
-            TurmaController.cadastrar_turma(
-                dados,
-                st.session_state.turmas
-            )
-            st.session_state.contador_turmas += 1
-            st.success("Turma cadastrada com sucesso!")
-            st.rerun()
-        except ValueError as e:
-            st.error(str(e))
+                try:
+                    TurmaController.cadastrar_turma(
+                        dados_cadastro,
+                        st.session_state.turmas
+                    )
+                    st.session_state.contador_turmas += 1
+                    st.success("Turma cadastrada!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(str(e))
