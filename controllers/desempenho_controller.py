@@ -1,5 +1,6 @@
 from services.desempenho_services import DesempenhoService
 from data import csv_repository
+import streamlit as st
 
 class DesempenhoController:
 
@@ -24,6 +25,9 @@ class DesempenhoController:
             # Certifique-se de que esta função existe no seu csv_repository
             csv_repository.salvar_notas(lista_notas)
             
+            # Sincroniza com o estado global do Streamlit
+            st.session_state["notas"] = lista_notas
+
             return nova_nota
             
         except Exception as e:
