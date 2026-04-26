@@ -1,2 +1,2 @@
-aluno,disciplina
-2,12
+id_aluno,id_disciplina,id_turma,valor,tipo
+1,1,1,2.5,prova

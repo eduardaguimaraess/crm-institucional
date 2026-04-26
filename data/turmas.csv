@@ -1,12 +1,2 @@
 id_turma,nome,curso,disciplina,professor,horario,vagas,status
-1,TI-Info-Noite,1,1,2,Segunda 19:00 - 21:00,30,Ativa
-2,TI-Redes-Quarta,1,2,3,Quarta 19:00 - 21:00,25,Ativa
-3,DS-Logica-Terca,2,4,2,Terça 19:00 - 21:00,35,Ativa
-4,DS-BD-Quinta,2,5,3,Quinta 19:00 - 21:00,30,Ativa
-5,ADM-Financeiro,3,7,3,Segunda 19:00 - 21:00,40,Ativa
-6,Eletro-Comandos,4,10,3,Quinta 18:30 - 21:30,20,Ativa
-7,Mecanica-Desenho,5,12,3,Quarta 18:30 - 21:30,25,Ativa
-8,Enfermagem-Fund,6,13,3,Segunda 18:00 - 22:00,30,Ativa
-9,SegTrab-Riscos,7,15,2,Terça 19:00 - 21:00,35,Ativa
-10,Logistica-Estoque,8,17,3,Quarta 19:00 - 21:00,30,Inativa
-11,História da Arte - Manhã,9,18,2,Terça 07:30 - 12:50,30,Ativa
+1,turma teste,1,1,1,18:00,20,Ativa

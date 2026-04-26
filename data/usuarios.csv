@@ -1,7 +1,2 @@
 id_usuario,nome,data_nascimento,cpf,genero,telefone,email,senha,cargo,ativo,id_endereco,cep,logradouro,numero,bairro
-1,Ana Paula Ribeiro,1988-05-14,12345678901,Feminino,31999990001,ana@escola.com,1234,Administrador,True,0,30130010,Rua das Flores,120,Centro
-2,Carlos Eduardo Lima,1985-03-22,23456789012,Masculino,31999990002,carlos@escola.com,1234,Professor,True,0,30140020,Avenida Brasil,450,Savassi
-3,Fernanda Alves Souza,1990-09-10,34567890123,Feminino,31999990003,fernanda@escola.com,1234,Professor,True,0,30150030,Rua São Paulo,98,Funcionários
-4,Lucas Henrique Gomes,2002-01-18,45678901234,Masculino,31999990004,lucas@escola.com,1234,Captador Comercial,True,0,30160040,Rua Afonso Pena,200,Centro
-5,Marina Costa Rocha,1995-11-02,56789012345,Feminino,31999990005,marina@escola.com,1234,Captador Comercial,True,0,30170050,Rua Goiás,75,Lourdes
-6,Helem Ramos,2026-04-26,10987654321,Feminino,22999990809,helemramos@gmail.com,1234,Captador Comercial,True,6,28390000,Esculápio Monteiro,22,Operário
+1,dyoghooo,2008-04-15,55555555555,Masculino,28999344082,dyogo123@email.com,12345,Professor,True,1,29470000,rua centro,111,centro

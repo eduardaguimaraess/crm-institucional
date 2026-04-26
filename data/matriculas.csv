@@ -1,8 +1,2 @@
 aluno,turma,data_matricula,status,id_matricula
-2,1,2025-02-03,Ativa,2
-3,2,2025-02-05,Ativa,3
-4,3,2025-02-06,Ativa,4
-6,1,2026-04-26,Ativa,5
-5,1,2026-04-26,Concluída,6
-2,7,2026-04-26,Ativa,7
-6,11,2026-04-26,Ativa,8
+1,1,2026-04-26,Ativa,1

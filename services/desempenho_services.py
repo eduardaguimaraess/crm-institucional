@@ -6,71 +6,45 @@ from models.disciplina import Disciplina
 class DesempenhoService:
 
     @staticmethod
-    def registrar_nota(
-        aluno: Aluno,
-        turma, # Adicionado para alinhar com o Controller
-        valor: float,
-        tipo: str,
-        lista_notas: list = None, # Para persistência global se necessário
-        **kwargs # Blindagem contra argumentos extras
-    ) -> Desempenho:
-        
-        # 1. Validação de escala (0 a 100 conforme sua View)
+    def registrar_nota(aluno: Aluno, turma, valor: float, tipo: str, lista_notas: list = None, **kwargs) -> Desempenho:
+        # 1. Validação de escala
         if valor < 0 or valor > 100:
             raise ValueError("Nota deve estar entre 0 e 100.")
 
-        # 2. Garantir que o aluno tenha lista de desempenhos
         if not hasattr(aluno, "desempenhos"):
             aluno.desempenhos = []
 
-        # 3. Buscar desempenho existente por Disciplina (vinda da Turma)
-        disciplina = turma.disciplina if hasattr(turma, 'disciplina') else kwargs.get('disciplina')
-        
+        # 3. Buscar desempenho existente
         desempenho = next(
-            (d for d in aluno.desempenhos if d.disciplina == disciplina),
+            (d for d in lista_notas if d.aluno.id_aluno == aluno.id_aluno and d.turma.id_turma == turma.id_turma),
             None
         )
 
-        # 4. Criar objeto de desempenho se não existir para essa disciplina
+        # 4. Criar se não existir
         if not desempenho:
+            disciplina = turma.disciplina if hasattr(turma, 'disciplina') else kwargs.get('disciplina')
             desempenho = Desempenho(aluno, disciplina)
+            desempenho.turma = turma
+            # GARANTE O ID PARA NÃO DAR ERRO NA TELA (image_47807c)
+            desempenho.id_desempenho = len(lista_notas) + 1 if lista_notas is not None else 0
+            
+            if lista_notas is not None:
+                lista_notas.append(desempenho)
             aluno.desempenhos.append(desempenho)
 
-        # 5. Adicionar a nota (Ajuste o método na sua Model Desempenho se necessário)
         desempenho.adicionar_nota(valor, tipo)
-        
-        # 6. Sincronização opcional com lista global de notas (Session State)
-        if lista_notas is not None:
-            # Se sua lista global espera objetos Nota, você os adicionaria aqui.
-            # Se ela espera os objetos Desempenho, adicionamos o desempenho.
-            if desempenho not in lista_notas:
-                lista_notas.append(desempenho)
-
         return desempenho
 
     @staticmethod
     def calcular_media(desempenho: Desempenho) -> float:
         if not desempenho or not hasattr(desempenho, 'notas') or not desempenho.notas:
             return 0.0
-
-        # Filtra notas que não são de recuperação para a média normal
-        notas_normais = [
-            n["valor"] for n in desempenho.notas
-            if n.get("tipo") != "recuperacao"
-        ]
-
-        if not notas_normais:
-            return 0.0
-
-        return mean(notas_normais)
+        notas_normais = [n["valor"] for n in desempenho.notas if n.get("tipo") != "recuperacao"]
+        return mean(notas_normais) if notas_normais else 0.0
 
     @staticmethod
     def definir_status(desempenho: Desempenho) -> str:
         media = DesempenhoService.calcular_media(desempenho)
-
-        if media >= 70:
-            return "Aprovado"
-        elif 40 <= media < 70:
-            return "Recuperação"
-        else:
-            return "Reprovado"
+        if media >= 70: return "Aprovado"
+        elif 40 <= media < 70: return "Recuperação"
+        return "Reprovado"

@@ -22,5 +22,3 @@ class Frequencia:
     def marcar_falta(self):
         self.presente = False
 
-
-from datetime import date
