@@ -99,12 +99,13 @@ def mostrar_desempenho():
     if notas_filtradas:
         # Exibe as notas em colunas
         cols = st.columns(len(notas_filtradas) if len(notas_filtradas) < 4 else 4)
-        for i, n in enumerate(notas_filtradas):
-            with cols[i % 4]:
-                st.metric(label=n.tipo, value=f"{n.valor:.1f}")
+        for desempenho in notas_filtradas:
+            for nota in desempenho.notas:
+                st.metric(label=nota["tipo"].capitalize(), value=f'{nota["valor"]:.1f}')
 
         # Cálculo da média via Service
-        media = DesempenhoService.calcular_media(aluno_sel, turma_sel)
+        desempenho_atual = notas_filtradas[0]
+        media = DesempenhoService.calcular_media(desempenho_atual)
         
         # Estilização da Situação
         cor = "green" if media >= 7.0 else "red"

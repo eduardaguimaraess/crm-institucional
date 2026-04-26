@@ -1,2 +1,6 @@
 id_aluno,id_disciplina,id_turma,valor,tipo
+1,1,1,9.0,trabalho
+1,1,1,5.0,trabalho
 1,1,1,9.0,prova
+1,1,1,7.0,atividade
+1,1,1,1.0,prova
