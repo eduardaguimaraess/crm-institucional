@@ -1,6 +1,7 @@
 import streamlit as st
+from utils.auth import login_required
 
-
+@login_required
 def mostrar_dashboard():
     usuario = st.session_state.get("usuario_logado")
 

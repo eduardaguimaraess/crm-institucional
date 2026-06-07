@@ -17,7 +17,7 @@ from views.desempenho_view import mostrar_desempenho
 
 def main():
     st.set_page_config(
-        page_title="Sistema AcadÃªmico",
+        page_title="Sistema Acadêmico",
         layout="wide"
     )
 
