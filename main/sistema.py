@@ -1,0 +1,5 @@
+
+usuarios = []
+alunos = []
+cursos = []
+turmas = []
