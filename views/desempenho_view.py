@@ -12,7 +12,9 @@ def mostrar_desempenho():
     # Garantimos que as listas existam no state para evitar erros de AtributeError
     alunos = st.session_state.get('alunos', [])
     matriculas = st.session_state.get('matriculas', [])
-    notas = st.session_state.get('notas', [])
+    
+    # CORREÇÃO: Pegando a lista correta 'desempenhos' em vez de 'notas'
+    desempenhos = st.session_state.get('desempenhos', [])
 
     if not alunos:
         st.warning("Cadastre alunos antes de lançar notas.")
@@ -53,8 +55,7 @@ def mostrar_desempenho():
         col1, col2 = st.columns(2)
         
         with col1:
-            # Nota ajustada para 0-10 conforme a regra de negócio padrão, 
-            # mas você pode alterar max_value para 100 se preferir.
+            # Nota ajustada para 0-10 conforme a regra de negócio padrão
             valor_nota = st.number_input(
                 "Nota (0 a 10)", 
                 min_value=0.0, 
@@ -80,11 +81,11 @@ def mostrar_desempenho():
             }
             
             try:
-                # O Controller atualizará a lista 'notas' na memória
-                DesempenhoController.lancar_nota(dados_nota, notas)
+                # CORREÇÃO: Passando 'desempenhos' para o controller atualizar
+                DesempenhoController.lancar_nota(dados_nota, desempenhos)
                 
-                # GRAVAÇÃO NO BANCO DE DADOS MYSQL
-                salvar_desempenhos(notas)
+                # CORREÇÃO: Salvando a lista 'desempenhos' no banco de dados MySQL
+                salvar_desempenhos(desempenhos)
                 
                 st.success(f"Nota registrada para {aluno_sel.nome}!")
                 st.rerun()
@@ -95,11 +96,20 @@ def mostrar_desempenho():
     st.markdown("---")
     st.subheader(f"📑 Boletim: {aluno_sel.nome}")
     
-    # Filtra as notas existentes para este aluno e esta turma
-    notas_filtradas = [
-        n for n in notas 
-        if str(n.aluno.cpf).strip() == cpf_busca and n.turma.id_turma == turma_sel.id_turma
-    ]
+    # CORREÇÃO DEFINITIVA DO BOLETIM:
+    # O banco de dados salva a Disciplina, não a Turma. 
+    # Filtramos pela disciplina para a nota não ficar invisível ao recarregar!
+    notas_filtradas = []
+    for n in desempenhos:
+        if str(n.aluno.cpf).strip() == cpf_busca:
+            # 1ª Tentativa: Compara a Disciplina (Modo seguro após puxar do MySQL)
+            if getattr(n, "disciplina", None) and getattr(turma_sel, "disciplina", None):
+                if n.disciplina.id_disciplina == turma_sel.disciplina.id_disciplina:
+                    notas_filtradas.append(n)
+            # 2ª Tentativa: Compara a Turma (Para notas recém-criadas que ainda não foram pro banco)
+            elif getattr(n, "turma", None) and n.turma.id_turma == turma_sel.id_turma:
+                if n not in notas_filtradas:
+                    notas_filtradas.append(n)
 
     if notas_filtradas:
         # Exibe as notas em colunas

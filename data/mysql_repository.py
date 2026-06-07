@@ -13,11 +13,9 @@ from datetime import datetime
 def carregar_usuarios():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM usuarios")
     dados = cursor.fetchall()
     usuarios = []
-
     for linha in dados:
         endereco = Endereco(
             id_endereco=linha["id_endereco"],
@@ -26,7 +24,6 @@ def carregar_usuarios():
             numero="",
             bairro=""
         )
-
         usuario = Usuario(
             id_usuario=linha["id_usuario"],
             nome=linha["nome"],
@@ -40,18 +37,15 @@ def carregar_usuarios():
             endereco=endereco
         )
         usuarios.append(usuario)
-
     conn.close()
     return usuarios
 
 def carregar_alunos():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM alunos")
     dados = cursor.fetchall()
     alunos = []
-
     for linha in dados:
         endereco = Endereco(
             id_endereco=linha["id_endereco"],
@@ -60,7 +54,6 @@ def carregar_alunos():
             numero="",
             bairro=""
         )
-
         aluno = Aluno(
             id_aluno=linha["id_aluno"],
             nome=linha["nome"],
@@ -73,31 +66,14 @@ def carregar_alunos():
             responsavel=linha["responsavel"]
         )
         alunos.append(aluno)
-
     conn.close()
     return alunos
 
 def salvar_usuarios(lista_usuarios):
     conn = conectar()
     cursor = conn.cursor()
-
-    # Desativa checagem de chaves estrangeiras temporariamente para limpeza estável
-    cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
     cursor.execute("DELETE FROM usuarios")
-
     for usuario in lista_usuarios:
-        # Garante a existência do endereço relacionado antes de criar o usuário
-        cursor.execute("""
-            REPLACE INTO enderecos (id_endereco, cep, logradouro, numero, bairro)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (
-            usuario.endereco.id_endereco,
-            getattr(usuario.endereco, 'cep', ''),
-            getattr(usuario.endereco, 'logradouro', ''),
-            getattr(usuario.endereco, 'numero', ''),
-            getattr(usuario.endereco, 'bairro', '')
-        ))
-
         cursor.execute("""
             INSERT INTO usuarios
             (
@@ -119,24 +95,21 @@ def salvar_usuarios(lista_usuarios):
             usuario.ativo,
             usuario.endereco.id_endereco
         ))
-
-    cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
     conn.commit()
     conn.close()
 
 def salvar_alunos(lista_alunos):
     print("ENTROU NO SALVAR_ALUNOS")
     print("Quantidade:", len(lista_alunos))
-
     conn = conectar()
     cursor = conn.cursor()
-
-    # Desativa checagem de chaves estrangeiras temporariamente para limpeza estável
+    
+    # 1. Desliga a trava temporariamente para limpar a tabela sem erro
     cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
     cursor.execute("DELETE FROM alunos")
-
+    
     for aluno in lista_alunos:
-        # Garante a existência do endereço relacionado antes de criar o aluno
+        # 2. Salva o endereço PRIMEIRO (constrói o terreno)
         cursor.execute("""
             REPLACE INTO enderecos (id_endereco, cep, logradouro, numero, bairro)
             VALUES (%s, %s, %s, %s, %s)
@@ -148,6 +121,7 @@ def salvar_alunos(lista_alunos):
             getattr(aluno.endereco, 'bairro', '')
         ))
 
+        # 3. Salva o aluno DEPOIS (coloca o morador)
         cursor.execute("""
             INSERT INTO alunos
             (
@@ -168,19 +142,18 @@ def salvar_alunos(lista_alunos):
             aluno.status,
             aluno.endereco.id_endereco
         ))
-
+        
+    # 4. Liga a trava de segurança novamente
     cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
     conn.commit()
     conn.close()
-
+    
 def carregar_cursos():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM cursos")
     dados = cursor.fetchall()
     cursos = []
-
     for linha in dados:
         curso = Curso(
             id_curso=linha["id_curso"],
@@ -190,16 +163,13 @@ def carregar_cursos():
             ativo=linha["ativo"]
         )
         cursos.append(curso)
-
     conn.close()
     return cursos
 
 def salvar_cursos(lista_cursos):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM cursos")
-
     for curso in lista_cursos:
         cursor.execute("""
             INSERT INTO cursos
@@ -215,16 +185,13 @@ def salvar_cursos(lista_cursos):
             curso.valor,
             curso.ativo
         ))
-
     conn.commit()
     conn.close()
 
 def salvar_disciplinas(lista_disciplinas):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM disciplinas")
-
     for disciplina in lista_disciplinas:
         cursor.execute("""
             INSERT INTO disciplinas
@@ -245,29 +212,24 @@ def salvar_disciplinas(lista_disciplinas):
             disciplina.hora_fim,
             disciplina.ativa
         ))
-
     conn.commit()
     conn.close()
 
 def carregar_disciplinas(cursos, usuarios):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM disciplinas")
     dados = cursor.fetchall()
     disciplinas = []
-
     for linha in dados:
         curso = next(
             (c for c in cursos if c.id_curso == linha["id_curso"]),
             None
         )
-
         professor = next(
             (u for u in usuarios if u.id_usuario == linha["id_professor"]),
             None
         )
-
         if curso and professor:
             disciplina = Disciplina(
                 id_disciplina=linha["id_disciplina"],
@@ -281,16 +243,13 @@ def carregar_disciplinas(cursos, usuarios):
                 ativa=linha["ativa"]
             )
             disciplinas.append(disciplina)
-
     conn.close()
     return disciplinas
 
 def salvar_turmas(lista_turmas):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM turmas")
-
     for turma in lista_turmas:
         cursor.execute("""
             INSERT INTO turmas
@@ -310,34 +269,28 @@ def salvar_turmas(lista_turmas):
             turma.vagas,
             turma.status
         ))
-
     conn.commit()
     conn.close()
 
 def carregar_turmas(cursos, disciplinas, usuarios):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM turmas")
     dados = cursor.fetchall()
     turmas = []
-
     for linha in dados:
         curso = next(
             (c for c in cursos if c.id_curso == linha["id_curso"]),
             None
         )
-
         disciplina = next(
             (d for d in disciplinas if d.id_disciplina == linha["id_disciplina"]),
             None
         )
-
         professor = next(
             (u for u in usuarios if u.id_usuario == linha["id_professor"]),
             None
         )
-
         if curso and disciplina and professor:
             turma = Turma(
                 id_turma=linha["id_turma"],
@@ -350,16 +303,13 @@ def carregar_turmas(cursos, disciplinas, usuarios):
                 status=linha["status"]
             )
             turmas.append(turma)
-
     conn.close()
     return turmas
 
 def salvar_matriculas(lista_matriculas):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM matriculas")
-
     for matricula in lista_matriculas:
         cursor.execute("""
             INSERT INTO matriculas
@@ -375,29 +325,24 @@ def salvar_matriculas(lista_matriculas):
             matricula.data_matricula,
             matricula.status
         ))
-
     conn.commit()
     conn.close()
 
 def carregar_matriculas(alunos, turmas):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM matriculas")
     dados = cursor.fetchall()
     matriculas = []
-
     for linha in dados:
         aluno = next(
             (a for a in alunos if a.id_aluno == linha["id_aluno"]),
             None
         )
-
         turma = next(
             (t for t in turmas if t.id_turma == linha["id_turma"]),
             None
         )
-
         if aluno and turma:
             matricula = Matricula(
                 aluno=aluno,
@@ -407,16 +352,13 @@ def carregar_matriculas(alunos, turmas):
             matricula.data_matricula = linha["data_matricula"]
             matricula.status = linha["status"]
             matriculas.append(matricula)
-
     conn.close()
     return matriculas
 
 def salvar_frequencias(lista_frequencias):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM frequencias")
-
     for freq in lista_frequencias:
         cursor.execute("""
             INSERT INTO frequencias
@@ -432,29 +374,24 @@ def salvar_frequencias(lista_frequencias):
             freq.data,
             freq.presente
         ))
-
     conn.commit()
     conn.close()
 
 def carregar_frequencias(alunos, turmas):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM frequencias")
     dados = cursor.fetchall()
     frequencias = []
-
     for linha in dados:
         aluno = next(
             (a for a in alunos if a.id_aluno == linha["id_aluno"]),
             None
         )
-
         turma = next(
             (t for t in turmas if t.id_turma == linha["id_turma"]),
             None
         )
-
         if aluno and turma:
             freq = Frequencia(
                 aluno=aluno,
@@ -465,18 +402,15 @@ def carregar_frequencias(alunos, turmas):
             freq.id_frequencia = linha["id_frequencia"]
             freq.presente = linha["presente"]
             frequencias.append(freq)
-
     conn.close()
     return frequencias
 
 def salvar_desempenhos(lista_desempenhos):
     conn = conectar()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM desempenho")
-
     for des in lista_desempenhos:
-        for nota in des.notes:
+        for nota in des.notas:
             cursor.execute("""
                 INSERT INTO desempenho
                 (
@@ -490,43 +424,35 @@ def salvar_desempenhos(lista_desempenhos):
                 nota["valor"],
                 nota["tipo"]
             ))
-
     conn.commit()
     conn.close()
 
 def carregar_desempenhos(alunos, turmas, disciplinas):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-
     cursor.execute("SELECT * FROM desempenho")
     dados = cursor.fetchall()
-
     for aluno in alunos:
         aluno.desempenhos = []
-
-    desempenhos = []
-
+    desempenhos=[]
     for linha in dados:
         aluno = next(
             (a for a in alunos if a.id_aluno == linha["id_aluno"]),
             None
         )
-
         disciplina = next(
             (d for d in disciplinas if d.id_disciplina == linha["id_disciplina"]),
             None
         )
-
         if aluno and disciplina:
             des = next(
                 (
                     x for x in desempenhos
-                    if x.aluno.id_aluno == aluno.id_aluno
-                    and x.disciplina.id_disciplina == disciplina.id_disciplina
+                    if x.aluno.id_aluno==aluno.id_aluno
+                    and x.disciplina.id_disciplina==disciplina.id_disciplina
                 ),
                 None
             )
-
             if not des:
                 des = Desempenho(aluno, disciplina)
                 des.turma = next(
@@ -537,18 +463,14 @@ def carregar_desempenhos(alunos, turmas, disciplinas):
                     ),
                     None
                 )
-                des.id_desempenho = len(desempenhos) + 1
+                des.id_desempenho = len(desempenhos)+1
                 desempenhos.append(des)
-
             des.adicionar_nota(
                 linha["valor"],
                 linha["tipo"]
             )
-
             if not hasattr(aluno, "desempenhos"):
                 aluno.desempenhos = []
-
             aluno.desempenhos.append(des)
-         
     conn.close()
     return desempenhos
