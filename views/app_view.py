@@ -38,6 +38,29 @@ def main():
 
     pagina = st.session_state.get("pagina_atual", "dashboard")
 
+    # =========================================================================
+    # 🔐 TRAVA DE SEGURANÇA: CONTROLE DE ACESSO POR CARGO (VERSÃO BLINDADA)
+    # =========================================================================
+    paginas_restritas = ["cursos", "disciplinas", "turmas", "funcionarios"]
+
+    if pagina in paginas_restritas:
+        # Procura o usuário logado de forma flexível no session_state
+        usuario_atual = st.session_state.get("usuario") or st.session_state.get("usuario_atual")
+        
+        # Garante a leitura correta do cargo, seja como dicionário ou objeto class
+        if isinstance(usuario_atual, dict):
+            cargo = str(usuario_atual.get("cargo", "")).strip().lower()
+        else:
+            cargo = str(getattr(usuario_atual, "cargo", "")).strip().lower()
+        
+        # Bloqueia o acesso caso não seja um administrador válido
+        if cargo not in ["admin", "administrador"]:
+            st.error("❌ Acesso Negado! Você não tem permissão para acessar esta área administrativa.")
+            mostrar_dashboard()
+            return
+    # =========================================================================
+
+    # Roteamento seguro das páginas
     if pagina == "dashboard":
         mostrar_dashboard()
     elif pagina == "alunos":

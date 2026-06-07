@@ -1,7 +1,28 @@
 from models.aluno import Aluno
 
-
 class AlunoService:
+
+    @staticmethod
+    def validar_cpf(cpf: str) -> bool:
+        """Validação matemática real do CPF."""
+        cpf_limpo = ''.join(filter(str.isdigit, str(cpf)))
+        
+        if len(cpf_limpo) != 11 or cpf_limpo == cpf_limpo[0] * 11:
+            return False
+            
+        # Cálculo do 1º dígito
+        soma = sum(int(cpf_limpo[i]) * (10 - i) for i in range(9))
+        digito1 = 11 - (soma % 11)
+        if digito1 > 9:
+            digito1 = 0
+            
+        # Cálculo do 2º dígito
+        soma = sum(int(cpf_limpo[i]) * (11 - i) for i in range(10))
+        digito2 = 11 - (soma % 11)
+        if digito2 > 9:
+            digito2 = 0
+            
+        return cpf_limpo[-2:] == f"{digito1}{digito2}"
 
     @staticmethod
     def cadastrar_aluno(
@@ -17,8 +38,9 @@ class AlunoService:
         lista_alunos: list
     ) -> Aluno:
 
-        if not cpf.isdigit() or len(cpf) != 11:
-            raise ValueError("CPF do aluno inválido.")
+        # 1. NOVA VALIDAÇÃO INTELIGENTE DE CPF
+        if not AlunoService.validar_cpf(cpf):
+            raise ValueError("CPF inválido! O número digitado não é um CPF real.")
 
         for aluno in lista_alunos:
             if aluno.cpf == cpf:
@@ -65,6 +87,10 @@ class AlunoService:
         if not aluno:
             raise ValueError("Aluno não encontrado.")
 
+        # VALIDAÇÃO INTELIGENTE NA HORA DE ATUALIZAR TAMBÉM
+        if not AlunoService.validar_cpf(cpf):
+            raise ValueError("CPF inválido! O número digitado não é um CPF real.")
+
         for outro in lista_alunos:
             if outro.cpf == cpf and outro.id_aluno != id_aluno:
                 raise ValueError("CPF já vinculado a outro aluno.")
@@ -80,5 +106,3 @@ class AlunoService:
         aluno.status = status
 
         return aluno
-
-    

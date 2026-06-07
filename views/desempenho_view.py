@@ -1,6 +1,7 @@
 import streamlit as st
 from controllers.desempenho_controller import DesempenhoController
 from services.desempenho_services import DesempenhoService
+from data.mysql_repository import salvar_desempenhos
 
 def mostrar_desempenho():
     st.title("📊 Desempenho / Notas")
@@ -79,8 +80,12 @@ def mostrar_desempenho():
             }
             
             try:
-                # O Controller salvará no CSV e atualizará a lista 'notas' na memória
+                # O Controller atualizará a lista 'notas' na memória
                 DesempenhoController.lancar_nota(dados_nota, notas)
+                
+                # GRAVAÇÃO NO BANCO DE DADOS MYSQL
+                salvar_desempenhos(notas)
+                
                 st.success(f"Nota registrada para {aluno_sel.nome}!")
                 st.rerun()
             except Exception as e:
